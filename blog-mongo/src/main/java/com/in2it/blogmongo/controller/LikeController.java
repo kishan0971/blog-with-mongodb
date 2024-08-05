@@ -1,5 +1,6 @@
 package com.in2it.blogmongo.controller;
 
+import java.nio.file.NoSuchFileException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,12 @@ public class LikeController {
 		
 		List<Like> allLikes = service.getAllLikes();
 		return ResponseEntity.ok(allLikes);
+	}
+	
+	@PostMapping("/like-blog")
+	public Like likeBlog(Like like) throws NoSuchFileException {
+		return service.likeBlog(like);
+		
 	}
 
 }
