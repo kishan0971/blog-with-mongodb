@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.in2it.blogmongo.model.Comment;
 
 @Repository
-public interface CommentRepository extends MongoRepository<Comment, Long> {
+public interface CommentRepository extends MongoRepository<Comment, String> {
 
 }

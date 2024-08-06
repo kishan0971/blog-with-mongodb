@@ -21,9 +21,9 @@ public class Like {
 	
 	
 	@Id
-	private Long id;
+	private String id;
 	private String type;
-	private long blogId;
+	private String blogId;
 	private long authorId;
 	private LocalDateTime createdAt;
 

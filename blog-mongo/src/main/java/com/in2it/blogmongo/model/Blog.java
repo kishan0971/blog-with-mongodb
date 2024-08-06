@@ -24,7 +24,7 @@ import lombok.ToString;
 public class Blog {
 	
 	@Id
-	private long id;
+	private String id;
 	private String title;
 	private String content;
 	private String visiblity;

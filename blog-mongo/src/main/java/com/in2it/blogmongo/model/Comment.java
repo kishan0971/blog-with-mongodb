@@ -26,13 +26,13 @@ public class Comment {
 	private String id;
 	private String content;
 	private String media;
-	private Long blogId;
+	private String blogId;
 	private Long authorid;
 	private LocalDateTime createdAt;
 	private int likesCount;
 	private List<Like> likes;
 	private List<Comment> replies;
-	private String status="ACTIVE";
+	private String status;
 	private Long deletedById;
 	private LocalDateTime deletedAt;
 

@@ -8,9 +8,9 @@ import java.util.List;
 
 
 @Repository
-public interface LikeRepository extends MongoRepository<Like, Long>{
+public interface LikeRepository extends MongoRepository<Like, String>{
 	
-	 List<Like> findLikeByAuthorIdAndBlogId(long authorId, long blogId);
+	 List<Like> findLikeByAuthorIdAndBlogId(long authorId, String blogId);
 	 List<Like> findByAuthorId(long authorId);
 
 }

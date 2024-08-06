@@ -15,7 +15,7 @@ public interface BlogService {
 
 	List<Blog> getAllBlogs();
 
-	Blog addBlog(Long id , String title, String content, String visiblity, List<MultipartFile> media, Long authorid, List<String> tags);
+	Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, Long authorid, List<String> tags);
 //	Blog addBlog(String title, String content, String visiblity, MultipartFile[] media, Long authorid, List<String> tags);
 
 }

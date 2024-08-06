@@ -46,15 +46,18 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public Comment commentOnBlog(String content, MultipartFile media, Long blogId, Long authorid) {
+	public Comment commentOnBlog(String content, MultipartFile media, String blogId, Long authorid) {
 		
 		
 		String file = null;
-		try {
-			file = fileService.uploadMedia(path, media);
-		} catch (IOException e) {
+		if(media != null && !media.isEmpty()) {
 			
-			e.printStackTrace();
+			try {
+				file = fileService.uploadMedia(path, media);
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}
 		}
 		
 		Comment comment = Comment.builder()
@@ -70,6 +73,8 @@ public class CommentServiceImpl implements CommentService {
 				.deletedAt(null)
 				.deletedById(null)
 				.build();
+		
+		
 		Comment save = repository.save(comment);
 		
 		Blog blog = blogRepository.findById(blogId).orElseThrow(()-> new RuntimeException("Blog dosen't Exist"));

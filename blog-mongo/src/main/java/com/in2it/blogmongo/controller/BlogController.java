@@ -32,13 +32,13 @@ public class BlogController {
 
 	@PostMapping(path = "/add-blog", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	 
-	public Blog addBlog(@RequestParam("id") Long id, @RequestParam("title") String title, @RequestParam("content") String content,
+	public Blog addBlog( @RequestParam("title") String title, @RequestParam("content") String content,
 			@RequestParam("visiblity") String visiblity,
 			@RequestParam("authorid") Long authorid, @RequestParam List<String> tags, @RequestParam("media") List<MultipartFile> media) {
 		
-		System.out.println("data : id "+id+" title "+title+" content "+content+" visiblity "+visiblity+" authorid "+authorid+" tags "+tags+" media "+media);
+		System.out.println("data :  title "+title+" content "+content+" visiblity "+visiblity+" authorid "+authorid+" tags "+tags+" media "+media);
 			
-		return service.addBlog(id, title, content, visiblity, media, authorid, tags);
+		return service.addBlog(title, content, visiblity, media, authorid, tags);
 		
 
 //		return "Done";

@@ -24,7 +24,8 @@ public class FileServiceImpl implements FileService {
 		
 		String randomId = UUID.randomUUID().toString();
 		
-		String newFileName = randomId.concat(name.substring(name.lastIndexOf(".")));
+//		String newFileName = randomId.concat(name.substring(name.lastIndexOf(".")));
+		String newFileName = randomId.concat(name);
 		
 		String filePath = path + File.separator + newFileName;
 		
@@ -34,7 +35,7 @@ public class FileServiceImpl implements FileService {
 			f.mkdir();
 		}
 		Files.copy(file.getInputStream(), Paths.get(filePath));
-		return name;
+		return newFileName;
 			
 	}
 

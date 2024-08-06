@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class Media {
 	
 	@Id
-	private Long id;
+	private String id;
 	private String fileName;
 	private String mediaType;
 

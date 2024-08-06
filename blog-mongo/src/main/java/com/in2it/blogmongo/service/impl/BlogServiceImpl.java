@@ -43,7 +43,7 @@ public class BlogServiceImpl implements BlogService{
 	}
 
 	@Override
-	public Blog addBlog(Long id, String title, String content, String visiblity, List<MultipartFile> media, Long authorid, List<String> tags) {
+	public Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, Long authorid, List<String> tags) {
 //		public Blog addBlog(String title, String content, String visiblity, MultipartFile[] media, Long authorid, List<String> tags) {
 		List<String> uploadedMedia = new ArrayList<>();
 		
@@ -69,7 +69,6 @@ public class BlogServiceImpl implements BlogService{
 		
 		Blog blog = Blog.builder()
 				
-		.id(id)
 		.title(title)
 		.content(content)
 		.visiblity(visiblity)
