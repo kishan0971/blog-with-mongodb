@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface LikeRepository extends MongoRepository<Like, String>{
 	
-	 List<Like> findLikeByAuthorIdAndBlogId(long authorId, String blogId);
-	 List<Like> findByAuthorId(long authorId);
+	 List<Like> findLikeByAuthorIdAndBlogId(String authorId, String blogId);
+	 List<Like> findByAuthorId(String authorId);
 
 }

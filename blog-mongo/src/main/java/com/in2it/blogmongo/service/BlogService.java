@@ -19,13 +19,17 @@ public interface BlogService {
 
 	List<Blog> getAllBlogs();
 	
+	List<Blog> getAllActiveBlogs();
+	
 	Blog getBlogByBlogId(String blogId);
 	
-	List<Blog> getBlogsByAuthorId(Long authorId);
+	List<Blog> getBlogsByAuthorId(String authorId);
 	
 	List<Blog> getBlogsByTitle(String title);
+	
+	void deleteAll();
 
-	Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, Long authorid, List<String> tags);
+	Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, String authorid, List<String> tags);
 	Blog updateBlog(String blogId, String title, String content, String visiblity, List<String> tags);
 
 }

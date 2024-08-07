@@ -36,7 +36,7 @@ public class Blog {
 	private List<Like> likes;
 	private List<Comment> comments;
 	private List<String> tags;
-	private long authorId;
+	private String authorId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private String status;

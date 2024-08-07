@@ -12,7 +12,9 @@ public interface BlogRepository extends MongoRepository<Blog, String>{
 	
 	List<Blog> findByAuthorId(long authorId);
 	
-	List<Blog> findByAuthorIdAndStatus(long authorId, String status);
+	List<Blog> findByStatus(String status);
+	
+	List<Blog> findByAuthorIdAndStatus(String authorId, String status);
 	
 	List<Blog> findByTitleAndStatus(String title, String status);
 	

@@ -14,10 +14,11 @@ import lombok.NoArgsConstructor;
 public class LikeDto {
 	
 	
-	private Long id;
+	private String id;
 	private String type;
-	private long blogId;
-	private long authorId;
+	private String blogId;
+	private String authorId;
 	private LocalDateTime createdAt;
+
 
 }

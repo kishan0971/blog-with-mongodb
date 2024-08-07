@@ -39,7 +39,7 @@ public class CommentController {
 	}
 	
 	@PostMapping(path =  "/comment-on-blog", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public Comment commentOnBlog(@RequestParam("content") String content,@RequestParam(name = "media", required = false) MultipartFile media,@RequestParam("blogId") String blogId,@RequestParam() Long authorid) {
+	public Comment commentOnBlog(@RequestParam("content") String content,@RequestParam(name = "media", required = false) MultipartFile media,@RequestParam("blogId") String blogId,@RequestParam() String authorid) {
 		return service.commentOnBlog(content, media, blogId, authorid);
 	}
 		

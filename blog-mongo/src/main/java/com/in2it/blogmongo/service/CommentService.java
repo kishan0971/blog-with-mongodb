@@ -13,6 +13,6 @@ public interface CommentService {
 	Comment addComment(Comment comment);
 	List<Comment> getAllComments();
 	
-	Comment commentOnBlog(String content, MultipartFile media, String blogId, Long authorid);
+	Comment commentOnBlog(String content, MultipartFile media, String blogId, String authorid);
 	
 }

@@ -49,7 +49,7 @@ public class BlogServiceImpl implements BlogService{
 	}
 
 	@Override
-	public Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, Long authorid, List<String> tags) {
+	public Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, String authorid, List<String> tags) {
 
 		List<String> uploadedMedia = new ArrayList<>();
 
@@ -98,7 +98,7 @@ public class BlogServiceImpl implements BlogService{
 	}
 
 	@Override
-	public List<Blog> getBlogsByAuthorId(Long authorId) {
+	public List<Blog> getBlogsByAuthorId(String authorId) {
 		
 		return repository.findByAuthorIdAndStatus(authorId, "ACTIVE");
 	}
@@ -134,6 +134,20 @@ public class BlogServiceImpl implements BlogService{
 		}
 		return repository.save(blog);
 	}
+
+	@Override
+	public List<Blog> getAllActiveBlogs() {
+		
+		return repository.findByStatus("ACTIVE");
+	}
+
+	@Override
+	public void deleteAll() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
 	
 	
 	

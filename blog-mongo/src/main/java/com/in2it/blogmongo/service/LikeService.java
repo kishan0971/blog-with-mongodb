@@ -13,7 +13,7 @@ public interface LikeService {
 	Like addLike(Like like);
 	List<Like> getAllLikes();
 	
-	Like likeBlog(Like like) throws NoSuchFileException;
+	Like likeBlog(String authorId, String blogId, String type) throws NoSuchFileException;
 	
 
 }

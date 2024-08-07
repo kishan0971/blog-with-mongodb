@@ -46,7 +46,7 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public Comment commentOnBlog(String content, MultipartFile media, String blogId, Long authorid) {
+	public Comment commentOnBlog(String content, MultipartFile media, String blogId, String authorid) {
 		
 		
 		String file = null;

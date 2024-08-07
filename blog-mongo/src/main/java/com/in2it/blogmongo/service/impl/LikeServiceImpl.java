@@ -34,9 +34,9 @@ public class LikeServiceImpl implements LikeService {
 	}
 
 	@Override
-	public Like likeBlog(Like like) throws NoSuchFileException {
+	public Like likeBlog(String authorId, String blogId, String type) throws NoSuchFileException {
 //		repository.findLikeByAuthorIdAndBlogId(like.getAuthorId(), like.getAuthorId()).isEmpty();
-		List<Like> likeByAuthorIdAndBlogId = repository.findLikeByAuthorIdAndBlogId(like.getAuthorId(), like.getBlogId());
+		List<Like> likeByAuthorIdAndBlogId = repository.findLikeByAuthorIdAndBlogId(authorId, blogId);
 		System.out.println(likeByAuthorIdAndBlogId);
 		for (Like like2 : likeByAuthorIdAndBlogId) {
 			System.out.println(like2);
@@ -44,11 +44,13 @@ public class LikeServiceImpl implements LikeService {
 		
 		if(likeByAuthorIdAndBlogId.isEmpty()) {
 			
-			Blog blog = blogRepository.findById(like.getBlogId()).orElseThrow(()-> new NoSuchFileException("No such element Found"));
+			Blog blog = blogRepository.findById(blogId).orElseThrow(()-> new NoSuchFileException("No such element Found"));
 			
 			List<Like> likes = blog.getLikes();
 			
-			like.setCreatedAt(LocalDateTime.now());
+			Like like = Like.builder().authorId(authorId).blogId(blogId).type(type).createdAt(LocalDateTime.now()).build();
+			
+//			like.setCreatedAt(LocalDateTime.now());
 			Like like2 = repository.save(like);
 			likes.add(like2);
 			blog.setLikes(likes);
