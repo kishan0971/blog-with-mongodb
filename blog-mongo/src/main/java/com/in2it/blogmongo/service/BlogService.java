@@ -12,10 +12,20 @@ import com.in2it.blogmongo.model.Blog;
 public interface BlogService {
 
 	Blog createBlog(Blog blog);
+	
+//	Blog updateBlog(Blog blog, String blogId);
+	
+	Blog deleteBlog(String blogId);
 
 	List<Blog> getAllBlogs();
+	
+	Blog getBlogByBlogId(String blogId);
+	
+	List<Blog> getBlogsByAuthorId(Long authorId);
+	
+	List<Blog> getBlogsByTitle(String title);
 
 	Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, Long authorid, List<String> tags);
-//	Blog addBlog(String title, String content, String visiblity, MultipartFile[] media, Long authorid, List<String> tags);
+	Blog updateBlog(String blogId, String title, String content, String visiblity, List<String> tags);
 
 }

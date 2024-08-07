@@ -28,6 +28,8 @@ public class Blog {
 	private String title;
 	private String content;
 	private String visiblity;
+	private Long departmentId;
+	private Long teamId;
 	private List<String> media;
 	private int commentsCount;
 	private int likesCount;
@@ -37,7 +39,7 @@ public class Blog {
 	private long authorId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
-	private String status="ACTIVE";
+	private String status;
 	private Long deletedById;
 	private LocalDateTime deletedAt;
 	

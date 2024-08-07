@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.in2it.blogmongo.helper.UploadFileHelper;
 import com.in2it.blogmongo.model.Blog;
 import com.in2it.blogmongo.repository.BlogRepository;
 import com.in2it.blogmongo.service.BlogService;
@@ -27,8 +28,13 @@ public class BlogServiceImpl implements BlogService{
 	@Autowired
 	FileService fileService;
 	
+	@Autowired
+	UploadFileHelper fileHelper;
+	
 	@Value("${project.media}")
 	String path;
+	
+	
 
 	@Override
 	public Blog createBlog(Blog blog) {
@@ -44,27 +50,24 @@ public class BlogServiceImpl implements BlogService{
 
 	@Override
 	public Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, Long authorid, List<String> tags) {
-//		public Blog addBlog(String title, String content, String visiblity, MultipartFile[] media, Long authorid, List<String> tags) {
+
 		List<String> uploadedMedia = new ArrayList<>();
-		
-//		uploadedImages = media.stream().map( file-> {
-//			try {
-//				return fileService.uploadMedia(path, file);
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			return file.getOriginalFilename();
-//		} ).collect(Collectors.toList());
-		
-		for (MultipartFile file : media) {
-			try {
-				String uploadMedia = fileService.uploadMedia(path, file);
-				uploadedMedia.add(uploadMedia);
-			} catch (IOException e) {
-				
-				e.printStackTrace();
+
+		if(media != null && !media.isEmpty()) {
+			for (MultipartFile file : media) {
+				try {
+					String uploadMedia = fileService.uploadMedia(path, file);
+					String uploadFile = fileHelper.uploadFile(file);
+					System.out.println("upload media "+ uploadMedia);
+					System.out.println("uploaded file "+ uploadFile);
+//					uploadedMedia.add(uploadMedia);
+					uploadedMedia.add(uploadFile)
+;				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
 			}
+			
 		}
 		
 		Blog blog = Blog.builder()
@@ -79,12 +82,56 @@ public class BlogServiceImpl implements BlogService{
 		.likesCount(0)
 		.likes(new ArrayList<>())
 		.comments(new ArrayList<>())
-		.status("Active")
+		.status("ACTIVE")
 		.media(uploadedMedia)
 		.build();
 		
 		
 		
+		return repository.save(blog);
+	}
+
+	@Override
+	public Blog getBlogByBlogId(String blogId) {
+		
+		return repository.findById(blogId).orElseThrow(()-> new RuntimeException("Data dosen't exist with given id... "+ blogId));
+	}
+
+	@Override
+	public List<Blog> getBlogsByAuthorId(Long authorId) {
+		
+		return repository.findByAuthorIdAndStatus(authorId, "ACTIVE");
+	}
+
+	@Override
+	public List<Blog> getBlogsByTitle(String title) {
+		
+//		return repository.findByTitleAndStatus(title, "ACTIVE");
+		return repository.findByStatusAndTitleContaining("ACTIVE", title);
+	}
+
+	@Override
+	public Blog updateBlog(String blogId, String title, String content, String visiblity, List<String> tags) {
+		Blog blog = repository.findById(blogId).orElseThrow(()-> new RuntimeException("Blog dosen't exist with given id"));
+		if(blog != null) {
+			blog.setTitle(title);
+			blog.setContent(content);
+			blog.setVisiblity(visiblity);
+			blog.setTags(tags);
+			blog.setUpdatedAt(LocalDateTime.now());	
+	
+		}
+		
+		return repository.save(blog);
+	}
+
+	@Override
+	public Blog deleteBlog(String blogId) {
+		Blog blog = repository.findById(blogId).orElseThrow(()-> new RuntimeException("Blog dosen't exist with given id"));
+		if(blog!=null) {
+			blog.setStatus("INACTIVE");
+			blog.setDeletedAt(LocalDateTime.now());
+		}
 		return repository.save(blog);
 	}
 	
