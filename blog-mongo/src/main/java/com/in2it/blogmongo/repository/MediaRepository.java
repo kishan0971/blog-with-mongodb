@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.in2it.blogmongo.model.Media;
 
 @Repository
-public interface MediaRepository extends MongoRepository<Media, Long> {
+public interface MediaRepository extends MongoRepository<Media, String> {
 	
 	
 

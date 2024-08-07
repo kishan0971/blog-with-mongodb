@@ -13,6 +13,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.in2it.blogmongo.service.FileService;
 
+import io.swagger.v3.oas.annotations.Hidden;
+
+@Hidden
 @RestController
 @RequestMapping("/medias")
 public class MediaController {

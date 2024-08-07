@@ -1,15 +1,19 @@
 package com.in2it.blogmongo.service.impl;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.in2it.blogmongo.dto.CommentDto;
+import com.in2it.blogmongo.helper.UploadFileHelper;
 import com.in2it.blogmongo.model.Blog;
 import com.in2it.blogmongo.model.Comment;
 import com.in2it.blogmongo.repository.BlogRepository;
@@ -30,6 +34,13 @@ public class CommentServiceImpl implements CommentService {
 	@Autowired
 	FileService fileService;
 	
+	@Autowired
+	UploadFileHelper fileHelper;
+	
+	@Autowired
+	ModelMapper mapper;
+	
+	
 	@Value("${project.media}")
 	String path;
 
@@ -40,24 +51,22 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 	@Override
-	public List<Comment> getAllComments() {
+	public List<CommentDto> getAllComments() {
 		
-		return repository.findAll();
+		List<Comment> allComments = repository.findAll();
+		return allComments.stream().map((comment)->mapper.map(comment, CommentDto.class)).collect(Collectors.toList());
 	}
 
 	@Override
-	public Comment commentOnBlog(String content, MultipartFile media, String blogId, String authorid) {
+	public CommentDto commentOnBlog(String content, MultipartFile media, String blogId, String authorid) {
 		
+		Blog blog = blogRepository.findById(blogId).orElseThrow(()-> new RuntimeException("Blog dosen't Exist"));
 		
 		String file = null;
 		if(media != null && !media.isEmpty()) {
 			
-			try {
-				file = fileService.uploadMedia(path, media);
-			} catch (IOException e) {
-				
-				e.printStackTrace();
-			}
+			//				file = fileService.uploadMedia(path, media);
+			file = fileHelper.uploadFile(media);
 		}
 		
 		Comment comment = Comment.builder()
@@ -75,9 +84,8 @@ public class CommentServiceImpl implements CommentService {
 				.build();
 		
 		
-		Comment save = repository.save(comment);
+		Comment savedComment = repository.save(comment);
 		
-		Blog blog = blogRepository.findById(blogId).orElseThrow(()-> new RuntimeException("Blog dosen't Exist"));
 		
 		List<Comment> comments = blog.getComments();
 		comments.add(comment);
@@ -88,7 +96,64 @@ public class CommentServiceImpl implements CommentService {
 		
 		
 		
-		return save;
+		return mapper.map(savedComment, CommentDto.class);
+	}
+
+	@Override
+	public List<CommentDto> getAllActiveComments() {
+		List<Comment> comments = repository.findByStatus("ACTIVE");
+		return comments.stream().map((comment)-> mapper.map(comment, CommentDto.class)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<CommentDto> getCommentsByBlogId(String blogId) {
+		List<Comment> comments = repository.findByStatusAndBlogId("ACTIVE", blogId);
+		return comments.stream().map((comment)-> mapper.map(comment, CommentDto.class)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<CommentDto> getCommentsByAuthorId(String authorId) {
+		List<Comment> comments = repository.findByStatusAndAuthorid("ACTIVE", authorId);
+		
+		return comments.stream().map((comment)-> mapper.map(comment, CommentDto.class)).collect(Collectors.toList());
+	}
+
+	@Override
+	public CommentDto deleteComment(String id) {
+		Comment comment = repository.findById(id).orElseThrow(()-> new RuntimeException("Comment Dosen't exist with given ID"));
+		
+		comment.setStatus("INACTIVE");
+		repository.save(comment);
+		
+		return mapper.map(comment, CommentDto.class);
+	}
+
+	@Override
+	public List<CommentDto> deleteCommentsByBlogId(String blogId) {
+		List<Comment> comments = repository.findByStatusAndBlogId("ACTIVE", blogId);
+		List<CommentDto> deletedComments = new ArrayList<>();
+		for (Comment comment : comments) {
+			comment.setStatus("INACTIVE");
+			Comment comment2 = repository.save(comment);
+			deletedComments.add(mapper.map(comment2, CommentDto.class));
+			
+		}
+		
+		return deletedComments;
+	}
+
+	@Override
+	public List<CommentDto> deleteCommentsByAuthorId(String authorId) {
+		List<Comment> comments = repository.findByStatusAndAuthorid("ACTIVE", authorId);
+		List<CommentDto> deletedComments = new ArrayList<>();
+		for (Comment comment : comments) {
+			comment.setStatus("INACTIVE");
+			Comment comment2 = repository.save(comment);
+			deletedComments.add(mapper.map(comment2, CommentDto.class));
+			
+		}
+		
+		return deletedComments;
 	}
 
 

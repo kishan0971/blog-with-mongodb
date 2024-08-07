@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.in2it.blogmongo.dto.BlogDto;
 import com.in2it.blogmongo.helper.UploadFileHelper;
 import com.in2it.blogmongo.model.Blog;
 import com.in2it.blogmongo.repository.BlogRepository;
@@ -31,6 +33,9 @@ public class BlogServiceImpl implements BlogService{
 	@Autowired
 	UploadFileHelper fileHelper;
 	
+	@Autowired
+	ModelMapper mapper;
+	
 	@Value("${project.media}")
 	String path;
 	
@@ -43,13 +48,16 @@ public class BlogServiceImpl implements BlogService{
 	}
 
 	@Override
-	public List<Blog> getAllBlogs() {
+	public List<BlogDto> getAllBlogs() {
 		
-		return repository.findAll();
+		List<Blog> allBlog = repository.findAll();
+		
+		return allBlog.stream().map((blog)->mapper.map(blog, BlogDto.class)).collect(Collectors.toList());
+		
 	}
 
 	@Override
-	public Blog addBlog(String title, String content, String visiblity, List<MultipartFile> media, String authorid, List<String> tags) {
+	public BlogDto addBlog(String title, String content, String visiblity, List<MultipartFile> media, String authorid, List<String> tags) {
 
 		List<String> uploadedMedia = new ArrayList<>();
 
@@ -88,30 +96,35 @@ public class BlogServiceImpl implements BlogService{
 		
 		
 		
-		return repository.save(blog);
-	}
-
-	@Override
-	public Blog getBlogByBlogId(String blogId) {
+		Blog savedBlog = repository.save(blog);
 		
-		return repository.findById(blogId).orElseThrow(()-> new RuntimeException("Data dosen't exist with given id... "+ blogId));
+		return mapper.map(savedBlog, BlogDto.class);
 	}
 
 	@Override
-	public List<Blog> getBlogsByAuthorId(String authorId) {
+	public BlogDto getBlogByBlogId(String blogId) {
 		
-		return repository.findByAuthorIdAndStatus(authorId, "ACTIVE");
+		Blog blog = repository.findById(blogId).orElseThrow(()-> new RuntimeException("Data dosen't exist with given id... "+ blogId));
+		return mapper.map(blog, BlogDto.class);
 	}
 
 	@Override
-	public List<Blog> getBlogsByTitle(String title) {
+	public List<BlogDto> getBlogsByAuthorId(String authorId) {
+		
+		List<Blog> allActiveBlog = repository.findByAuthorIdAndStatus(authorId, "ACTIVE");
+		return allActiveBlog.stream().map((blog)->mapper.map(blog, BlogDto.class)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<BlogDto> getBlogsByTitle(String title) {
 		
 //		return repository.findByTitleAndStatus(title, "ACTIVE");
-		return repository.findByStatusAndTitleContaining("ACTIVE", title);
+		List<Blog> blogs = repository.findByStatusAndTitleContaining("ACTIVE", title);
+		return blogs.stream().map((blog)->mapper.map(blog, BlogDto.class)).collect(Collectors.toList());
 	}
 
 	@Override
-	public Blog updateBlog(String blogId, String title, String content, String visiblity, List<String> tags) {
+	public BlogDto updateBlog(String blogId, String title, String content, String visiblity, List<String> tags) {
 		Blog blog = repository.findById(blogId).orElseThrow(()-> new RuntimeException("Blog dosen't exist with given id"));
 		if(blog != null) {
 			blog.setTitle(title);
@@ -122,30 +135,29 @@ public class BlogServiceImpl implements BlogService{
 	
 		}
 		
-		return repository.save(blog);
+		Blog updatedBlog = repository.save(blog);
+		return mapper.map(updatedBlog, BlogDto.class);
 	}
 
 	@Override
-	public Blog deleteBlog(String blogId) {
+	public BlogDto deleteBlog(String blogId) {
 		Blog blog = repository.findById(blogId).orElseThrow(()-> new RuntimeException("Blog dosen't exist with given id"));
 		if(blog!=null) {
 			blog.setStatus("INACTIVE");
 			blog.setDeletedAt(LocalDateTime.now());
 		}
-		return repository.save(blog);
+		Blog deletedBlog = repository.save(blog);
+		return mapper.map(deletedBlog, BlogDto.class);
 	}
 
 	@Override
-	public List<Blog> getAllActiveBlogs() {
+	public List<BlogDto> getAllActiveBlogs() {
 		
-		return repository.findByStatus("ACTIVE");
+		List<Blog> activeBlogs = repository.findByStatus("ACTIVE");
+		return activeBlogs.stream().map((blog)->mapper.map(blog, BlogDto.class)).collect(Collectors.toList());
 	}
 
-	@Override
-	public void deleteAll() {
-		// TODO Auto-generated method stub
-		
-	}
+
 	
 	
 	
