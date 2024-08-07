@@ -18,13 +18,18 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentDto {
 	
-	private Long id;
+	private String id;
 	private String content;
 	private String media;
-	private Long blogId;
-	private Long authorid;
+	private String blogId;
+	private String authorid;
 	private LocalDateTime createdAt;
 	private int likesCount;
+	private List<Like> likes;
 	private List<Comment> replies;
+	private String status;
+	private String deletedById;
+	private LocalDateTime deletedAt;
+
 
 }
