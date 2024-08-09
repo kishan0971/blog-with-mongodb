@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface BlogRepository extends MongoRepository<Blog, String>{
 	
-	List<Blog> findByAuthorId(long authorId);
+	List<Blog> findByAuthorId(String authorId);
 	
 	List<Blog> findByStatus(String status);
 	

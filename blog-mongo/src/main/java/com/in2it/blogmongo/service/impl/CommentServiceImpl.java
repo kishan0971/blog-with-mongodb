@@ -3,7 +3,6 @@ package com.in2it.blogmongo.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -121,7 +120,12 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public CommentDto deleteComment(String id) {
 		Comment comment = repository.findById(id).orElseThrow(()-> new RuntimeException("Comment Dosen't exist with given ID"));
-		
+		Blog blog = blogRepository.findById(comment.getBlogId()).orElseThrow(()-> new RuntimeException("Blog Dosen't exist with given ID"));
+		List<Comment> comments = blog.getComments();
+		comments.remove(comment);
+		blog.setComments(comments);
+		blog.setCommentsCount(blog.getCommentsCount()-1);
+		blogRepository.save(blog);
 		comment.setStatus("INACTIVE");
 		repository.save(comment);
 		
@@ -130,15 +134,25 @@ public class CommentServiceImpl implements CommentService {
 
 	@Override
 	public List<CommentDto> deleteCommentsByBlogId(String blogId) {
+		System.out.println("Deliting comments of geven blog "+ blogId);
 		List<Comment> comments = repository.findByStatusAndBlogId("ACTIVE", blogId);
 		List<CommentDto> deletedComments = new ArrayList<>();
 		for (Comment comment : comments) {
+			
+//			Blog blog = blogRepository.findById(comment.getBlogId()).orElseThrow(()-> new RuntimeException("Blog Dosen't exist with given ID"));
+//			List<Comment> comments2 = blog.getComments();
+//			comments2.remove(comment);
+//			blog.setComments(comments2);
+//			blog.setCommentsCount(blog.getCommentsCount()-1);
+//			blogRepository.save(blog);
+			
+			 
 			comment.setStatus("INACTIVE");
 			Comment comment2 = repository.save(comment);
 			deletedComments.add(mapper.map(comment2, CommentDto.class));
 			
 		}
-		
+		System.out.println("Deletion DONE");
 		return deletedComments;
 	}
 
@@ -147,6 +161,14 @@ public class CommentServiceImpl implements CommentService {
 		List<Comment> comments = repository.findByStatusAndAuthorid("ACTIVE", authorId);
 		List<CommentDto> deletedComments = new ArrayList<>();
 		for (Comment comment : comments) {
+			
+			Blog blog = blogRepository.findById(comment.getBlogId()).orElseThrow(()-> new RuntimeException("Blog Dosen't exist with given ID"));
+			List<Comment> comments2 = blog.getComments();
+			comments.remove(comment);
+			blog.setComments(comments2);
+			blog.setCommentsCount(blog.getCommentsCount()-1);
+			blogRepository.save(blog);
+			
 			comment.setStatus("INACTIVE");
 			Comment comment2 = repository.save(comment);
 			deletedComments.add(mapper.map(comment2, CommentDto.class));

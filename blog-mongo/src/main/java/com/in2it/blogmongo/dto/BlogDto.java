@@ -3,6 +3,8 @@ package com.in2it.blogmongo.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.in2it.blogmongo.model.Comment;
 import com.in2it.blogmongo.model.Like;
 
@@ -33,8 +35,12 @@ public class BlogDto {
 	private String authorId;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String status;
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private Long deletedById;
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private LocalDateTime deletedAt;
 	
 	

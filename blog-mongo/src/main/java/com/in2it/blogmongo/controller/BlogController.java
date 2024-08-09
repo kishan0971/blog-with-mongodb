@@ -42,14 +42,14 @@ public class BlogController {
 	@PostMapping(path = "author/{authorid}/add-blog", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<BlogDto> addBlog(@RequestParam("title") String title, @RequestParam("content") String content,
 			@RequestParam("visiblity") String visiblity, @PathVariable("authorid") String authorid,
-			@RequestParam(required = false) List<String> tags, @RequestParam(required = false) Long departmentId,
-			@RequestParam(required = false) Long teamId,
+			@RequestParam(required = false) List<String> tags, @RequestParam(required = false, defaultValue = "0") Long departmentId,
+			@RequestParam(required = false, defaultValue = "0") Long teamId,
 			@RequestParam(value = "media", required = false) List<MultipartFile> media) {
 
 		System.out.println("data :  title " + title + " content " + content + " visiblity " + visiblity + " authorid "
 				+ authorid + " tags " + tags + " media " + media);
 
-		BlogDto blog = service.addBlog(title, content, visiblity, media, authorid, tags);
+		BlogDto blog = service.addBlog(title, content, visiblity, media, authorid, tags, departmentId, teamId);
 		return ResponseEntity.status(HttpStatus.CREATED).body(blog);
 
 	}
@@ -96,6 +96,12 @@ public class BlogController {
 	@DeleteMapping("/delete/blog/{blogId}")
 	public BlogDto deleteBlog(@PathVariable String blogId) {
 		return service.deleteBlog(blogId);
+	}
+	
+
+	@DeleteMapping("blog/author/{authorId}")
+	public List<BlogDto> deleteByAuthorId(@PathVariable String authorId) {
+		return service.deleteByAuthorId(authorId);
 	}
 		
 

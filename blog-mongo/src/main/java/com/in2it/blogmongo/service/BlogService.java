@@ -16,6 +16,9 @@ public interface BlogService {
 //	Blog updateBlog(Blog blog, String blogId);
 	
 	BlogDto deleteBlog(String blogId);
+	
+	List<BlogDto> deleteByAuthorId(String authorId);
+	
 
 	List<BlogDto> getAllBlogs();
 	
@@ -29,7 +32,7 @@ public interface BlogService {
 	
 
 
-	BlogDto addBlog(String title, String content, String visiblity, List<MultipartFile> media, String authorid, List<String> tags);
+	BlogDto addBlog(String title, String content, String visiblity, List<MultipartFile> media, String authorid, List<String> tags, Long departmentId, Long teamId);
 	BlogDto updateBlog(String blogId, String title, String content, String visiblity, List<String> tags);
 
 }
